@@ -11,6 +11,9 @@ services:
     build: ./backend
     networks:
       - my_network
+    depends_on:
+      mongo-order-processing-service:
+        condition: service_healthy
 
   prometheus-order-processing-service:
     image: prom/prometheus:latest
@@ -24,18 +27,31 @@ services:
   mongo-order-processing-service:
     image: mongo
     restart: always
+    networks:
+      - my_network
     volumes:
-      - ./data-vol:/data/db
+      - ./mongo-data:/data/db
+    healthcheck:
+      test: echo 'mongo-order-processing-service.runCommand("ping").ok' | mongosh mongo-order-processing-service:27017 --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
-  mongo-express.order-processing-service:
+  mongo-express-order-processing-service:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - 8084:8081
+    networks:
+      - my_network
+    depends_on:
+      mongo-order-processing-service:
+        condition: service_healthy
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017//
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo-order-processing-service:27017/
