@@ -1,10 +1,10 @@
 db.createUser({
-	user: "order_admin",
+	user: "sudo_admin",
 	pwd: "password",
 	roles: [
 		{
 			role: "readWrite",
-			db: "all_orders",
+			db: "allOrders",
 		},
 	],
 });
