@@ -18,6 +18,10 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+    environment:
+      - DB_PORT=5002
+      - DB_USERNAME=root
+      - DB_PASSWORD=example
 
   prometheus-home-page-service:
     image: prom/prometheus:latest
@@ -45,13 +49,13 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: testdb
+      MONGO_INITDB_DATABASE: allOrders
 
   mongo-express:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - 8087:8081
     networks:
       - my_network
     depends_on:
