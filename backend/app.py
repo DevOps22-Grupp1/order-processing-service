@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, request, json
 from prometheus_flask_exporter import PrometheusMetrics
+
 from pymongo import MongoClient
 import os
 
+import pymongo
+from pymongo import MongoClient
 db_username = os.environ.get("DB_USERNAME")
 db_password = os.environ.get("DB_PASSWORD")
 app = Flask(__name__)
@@ -18,7 +21,8 @@ query = db.orders
 
 @app.route('/')
 def hello_world():
-    return 'Hello, this is Order processing catalog service'
+    return "Success", 200, {"Access-Control-Allow-Origin": "*"}
+    
 
 @app.route('/api/orders', methods=['GET'])
 def get_all_orders():
@@ -61,4 +65,6 @@ def increment_order():
     return str(db.orders.count_documents({}))
 
 if __name__ == '__main__':
+
     app.run(host="0.0.0.0", port=db_port, debug=False)
+
