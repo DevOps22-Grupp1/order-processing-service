@@ -6,13 +6,15 @@ import os
 
 import pymongo
 from pymongo import MongoClient
+db_port = os.environ.get("DB_PORT")
 db_username = os.environ.get("DB_USERNAME")
 db_password = os.environ.get("DB_PASSWORD")
+host = os.environ.get("DB_HOST")
 app = Flask(__name__)
 metrics = PrometheusMetrics(app)
-client = MongoClient('mongo', 27017, username=db_username,
+
+client = MongoClient(host, 27017, username=db_username,
                      password=db_password)
-db_port = os.environ.get("DB_PORT")
 
 db = client.allOrders
 query = db.orders
