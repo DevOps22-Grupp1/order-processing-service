@@ -2,7 +2,8 @@ name: Docker Build and Push
 
 on:
   push:
-    branches: ["*"]
+    branches:
+      - CI/CD-GitHub-actions
   pull_request:
     branches:
       - main
