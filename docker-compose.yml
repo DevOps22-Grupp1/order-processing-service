@@ -8,30 +8,30 @@ networks:
 volumes:
   mongo-data:
 
-
 services:
   order-processing-service:
     build: ./backend
     networks:
       - my_network
     ports:
-      - "5004:5002"
+      - "4007:4007"
     depends_on:
       mongo-order-processing-service:
         condition: service_healthy
     environment:
-      - DB_PORT=5002
+      - DB_PORT=4007
       - DB_USERNAME=root
       - DB_PASSWORD=example
+      - DB_HOST=mongo-order-processing-service
 
-  prometheus-order-processing-service:
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    networks:
-      - my_network
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yaml
+  # prometheus-order-processing-service:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - my_network
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yaml
 
   mongo-order-processing-service:
     image: mongo
