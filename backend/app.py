@@ -20,7 +20,6 @@ db = client.allOrders
 query = db.orders
 
 
-
 @app.route('/')
 def hello_world():
     return "Success", 200, {"Access-Control-Allow-Origin": "*"}
