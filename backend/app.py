@@ -43,6 +43,27 @@ def get_single_order(order_id):
         data.append(order)
     return jsonify(data)
 
+@app.route('/api/order-user/<user_id>', methods=['GET'])
+def get_single_order_user(user_id):
+    data = []
+    order = db.orders.find_one({"userid": int(user_id)})
+    if order:
+        order['_id'] = str(order['_id'])
+        data.append(order)
+    return jsonify(data)
+
+
+@app.route('/api/order-product/<product_id>', methods=['GET'])
+def get_single_order_product(product_id):
+    data = []
+    order = db.orders.find_one({"productid": int(product_id)})
+    if order:
+        order['_id'] = str(order['_id'])
+        data.append(order)
+    return jsonify(data)
+
+
+
 @app.route('/api/order', methods=['POST'])
 def post_order():
     data = json.loads(request.data)
