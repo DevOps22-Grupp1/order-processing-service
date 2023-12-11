@@ -42,4 +42,19 @@ db.orders.insertMany([
 		userid: 6,
 		productid: 4
 	},
+	{
+		id: 7,
+		userid: 7,
+		productid: 5
+	},
+	{
+		id: 8,
+		userid: 7,
+		productid: 2
+	},
+	{
+		id: 9,
+		userid: 7,
+		productid: 2
+	},
 ]);
