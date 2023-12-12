@@ -40,7 +40,6 @@ def get_all_orders():
         data.append(order)
     return jsonify(data)
 
-
 @app.route("/api/order/<order_id>", methods=["GET"])
 def get_single_order(order_id):
     data = []
@@ -74,16 +73,14 @@ def get_single_order_product(product_id):
 @app.route("/api/order", methods=["POST"])
 def post_order():
     data = json.loads(request.data)
-    data["id"] = increment_order()
+    data["id"] = int(increment_order())
     db.orders.insert_one(data)
     return "A new order has been added", 201, {"Access-Control-Allow-Origin": "*"}
-
 
 @app.route("/api/order/<order_id>", methods=["DELETE"])
 def delete_order(order_id):
     db.orders.delete_one({"id": int(order_id)})
-    return f"Deleted the order from the database"
-
+    return "Deleted the order from the database", 204, {"Access-Control-Allow-Origin": "*"}
 
 @app.route("/api/order/<order_id>", methods=["PUT"])
 def update_order(order_id):
@@ -94,7 +91,8 @@ def update_order(order_id):
 
 
 def increment_order():
-    return str(db.orders.count_documents({}))
+    id_fetch = query.find_one(sort=[("id", pymongo.DESCENDING)])
+    return str(id_fetch["id"] + 1)
 
 
 if __name__ == "__main__":
