@@ -25,8 +25,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t passwordnotsafe/order-processing-service:master ./backend
+          docker build -t passwordnotsafe/order-processing-service ./backend
 
       - name: Push Docker Image
         run: |
-          docker push passwordnotsafe/order-processing-service:master
+          docker push passwordnotsafe/order-processing-service
