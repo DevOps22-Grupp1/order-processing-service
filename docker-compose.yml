@@ -19,7 +19,8 @@ services:
       mongo-order-processing-service:
         condition: service_healthy
     environment:
-      - DB_PORT=4007
+      - SERVER_PORT=4007
+      - DB_PORT=27017
       - DB_USERNAME=root
       - DB_PASSWORD=example
       - DB_HOST=mongo-order-processing-service

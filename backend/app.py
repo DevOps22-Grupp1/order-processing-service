@@ -7,6 +7,7 @@ import os
 import pymongo
 from pymongo import MongoClient
 
+server_port = os.environ.get("SERVER_PORT")
 db_port = os.environ.get("DB_PORT")
 db_username = os.environ.get("DB_USERNAME")
 db_password = os.environ.get("DB_PASSWORD")
@@ -14,7 +15,7 @@ host = os.environ.get("DB_HOST")
 app = Flask(__name__)
 metrics = PrometheusMetrics(app)
 
-client = MongoClient(host, 27017, username=db_username, password=db_password)
+client = MongoClient(host, int(db_port), username=db_username, password=db_password)
 
 db = client.allOrders
 query = db.orders
@@ -39,6 +40,7 @@ def get_all_orders():
         order["_id"] = str(order["_id"])
         data.append(order)
     return jsonify(data)
+
 
 @app.route("/api/order/<order_id>", methods=["GET"])
 def get_single_order(order_id):
@@ -77,10 +79,16 @@ def post_order():
     db.orders.insert_one(data)
     return "A new order has been added", 201, {"Access-Control-Allow-Origin": "*"}
 
+
 @app.route("/api/order/<order_id>", methods=["DELETE"])
 def delete_order(order_id):
     db.orders.delete_one({"id": int(order_id)})
-    return "Deleted the order from the database", 204, {"Access-Control-Allow-Origin": "*"}
+    return (
+        "Deleted the order from the database",
+        204,
+        {"Access-Control-Allow-Origin": "*"},
+    )
+
 
 @app.route("/api/order/<order_id>", methods=["PUT"])
 def update_order(order_id):
@@ -96,4 +104,4 @@ def increment_order():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=db_port, debug=False)
+    app.run(host="0.0.0.0", port=server_port, debug=False)
