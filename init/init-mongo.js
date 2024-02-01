@@ -10,7 +10,7 @@ db.createUser({
 });
 
 db.createCollection("orders");
-db.orders.insertMany([
+db.cart.insertMany([
 	{
 		id: 1,
 		userid: 1,
@@ -57,4 +57,5 @@ db.orders.insertMany([
 		userid: 7,
 		productid: 2
 	},
-]);
+])
+db.orders.insertMany();
