@@ -4,6 +4,10 @@ on:
   push:
      branches:
        - CI/CD-GitHub-actions
+       - main
+
+permissions:
+  issues: write
 
 jobs:
   build:
@@ -30,3 +34,17 @@ jobs:
         run: |
           docker push passwordnotsafe/order-processing-service
           docker push passwordnotsafe/order-processing-service:${{ github.sha }}
+
+
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '15s' 
+
+      - name: Trigger fetch new sha update to k8 deployment file.
+        run: |
+          curl --request POST \
+            --url 'https://api.github.com/repos/DevOps22-Grupp1/scamazon/actions/workflows/order-update-sha.yml/dispatches' \
+            -H "Accept: application/vnd.github+json" \
+            -H 'Authorization: Bearer ${{secrets.TOKEN}}' \
+            -d '{"ref":"main"}'
