@@ -23,18 +23,18 @@ cart_query = db.cart
 
 
 @app.route("/")
-def hello_world():
+def hello_world() -> tuple:
     return "Success", 200, {"Access-Control-Allow-Origin": "*"}
 
 
 @app.route("/api/count-products/<user_id>")
-def count_product(user_id):
+def count_product(user_id: int) -> tuple:
     count = cart_query.count_documents({"userid": int(user_id)})
     return jsonify(count), 200, {"Access-Control-Allow-Origin": "*"}
 
 
 @app.route("/api/orders", methods=["GET"])
-def get_all_orders():
+def get_all_orders() -> tuple:
     data = []
     orders = query.find()
     for order in orders:
@@ -44,7 +44,7 @@ def get_all_orders():
 
 
 @app.route("/api/order/<order_id>", methods=["GET"])
-def get_single_order(order_id):
+def get_single_order(order_id: int) -> tuple:
     data = []
     orders = query.find({"id": int(order_id)}, {"_id": 0})
     if orders:
@@ -54,7 +54,7 @@ def get_single_order(order_id):
 
 
 @app.route("/api/cart/<order_id>", methods=["GET"])
-def get_single_cart(order_id):
+def get_single_cart(order_id: int) -> tuple:
     data = []
     orders = cart_query.find({"id": int(order_id)}, {"_id": 0})
     if orders:
@@ -64,7 +64,7 @@ def get_single_cart(order_id):
 
 
 @app.route("/api/cart-user/<user_id>", methods=["GET"])
-def get_single_cart_user(user_id):
+def get_single_cart_user(user_id: int) -> tuple:
     data = []
     orders = cart_query.find({"userid": int(user_id)}, {"_id": 0})
     if orders:
@@ -74,7 +74,7 @@ def get_single_cart_user(user_id):
 
 
 @app.route("/api/order-user/<user_id>", methods=["GET"])
-def get_single_order_user(user_id):
+def get_single_order_user(user_id: int) -> tuple:
     data = []
     orders = query.find({"userid": int(user_id)}, {"_id": 0})
     if orders:
@@ -84,7 +84,7 @@ def get_single_order_user(user_id):
 
 
 @app.route("/api/order-product/<product_id>", methods=["GET"])
-def get_single_order_product(product_id):
+def get_single_order_product(product_id: int) -> tuple:
     data = []
     orders = query.find({"productid": int(product_id)}, {"_id": 0})
     if orders:
@@ -94,7 +94,7 @@ def get_single_order_product(product_id):
 
 
 @app.route("/api/cart", methods=["POST"])
-def post_cart():
+def post_cart() -> tuple:
     data = json.loads(request.data)
     data["id"] = int(increment_cart_order())
     db.cart.insert_one(data)
@@ -102,7 +102,7 @@ def post_cart():
 
 
 @app.route("/api/order", methods=["POST"])
-def post_order():
+def post_order() -> tuple:
     data = json.loads(request.data)
     data["id"] = int(increment_orders_order())
     db.orders.insert_one(data)
@@ -110,7 +110,7 @@ def post_order():
 
 
 @app.route("/api/cart/<user_id>", methods=["DELETE"])
-def delete_cart(user_id):
+def delete_cart(user_id: int) -> tuple:
     cart_query.delete_many({"userid": int(user_id)})
     return (
         "Deleted the order from the database",
@@ -120,7 +120,7 @@ def delete_cart(user_id):
 
 
 @app.route("/api/order/<order_id>", methods=["DELETE"])
-def delete_order(order_id):
+def delete_order(order_id: int) -> tuple:
     query.delete_one({"id": int(order_id)})
     return (
         "Deleted the order from the database",
@@ -130,21 +130,21 @@ def delete_order(order_id):
 
 
 @app.route("/api/order/<order_id>", methods=["PUT"])
-def update_order(order_id):
+def update_order(order_id: int) -> tuple:
     data = json.loads(request.data)
     data["id"] = int(order_id)
     query.find_one_and_update({"id": int(order_id)}, {"$set": data})
     return f"Updated the order in the database"
 
 
-def increment_cart_order():
+def increment_cart_order() -> str:
     id_fetch = cart_query.find_one(sort=[("id", pymongo.DESCENDING)])
     if id_fetch == None:
         return "1"
     return str(id_fetch["id"] + 1)
 
 
-def increment_orders_order():
+def increment_orders_order() -> str:
     id_fetch = db.orders.find_one(sort=[("id", pymongo.DESCENDING)])
     if id_fetch == None:
         return "1"

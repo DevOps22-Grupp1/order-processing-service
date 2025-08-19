@@ -58,4 +58,3 @@ db.cart.insertMany([
 		productid: 2
 	},
 ])
-db.orders.insertMany();
