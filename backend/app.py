@@ -111,6 +111,7 @@ def post_order() -> tuple:
 
 @app.route("/api/cart/<cart_id>/<product_id>", methods=["DELETE"])
 def delete_cart(cart_id: int, product_id: int) -> tuple:
+    print("Deleting cart item:", cart_id, product_id)
     cart_query.delete_one({"id": int(cart_id), "productid": int(product_id)})
     return (
         "Deleted the product from the cart",
