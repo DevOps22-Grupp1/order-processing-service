@@ -109,9 +109,9 @@ def post_order() -> tuple:
     return "A new order has been added", 201, {"Access-Control-Allow-Origin": "*"}
 
 
-@app.route("/api/cart/<cart_id>", methods=["DELETE"])
-def delete_cart(cart_id: int) -> tuple:
-    cart_query.delete_one({"productid": int(cart_id)})
+@app.route("/api/cart/<cart_id>/<product_id>", methods=["DELETE"])
+def delete_cart(cart_id: int, product_id: int) -> tuple:
+    cart_query.delete_one({"id": int(cart_id), "productid": int(product_id)})
     return (
         "Deleted the product from the cart",
         204,
