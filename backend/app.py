@@ -14,10 +14,11 @@ db_password = os.environ.get("DB_PASSWORD")
 host = os.environ.get("DB_HOST")
 app = Flask(__name__)
 metrics = PrometheusMetrics(app)
+MONGO_URI = f"mongodb://{db_username}:{db_password}@{host}:{db_port}/?authSource=admin"
+client = MongoClient(MONGO_URI)
 
-client = MongoClient(host, int(db_port), username=db_username, password=db_password)
 
-db = client.allOrders
+db = client.allProducts
 query = db.orders
 cart_query = db.cart
 
